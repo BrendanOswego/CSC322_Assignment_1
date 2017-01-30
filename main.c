@@ -513,9 +513,6 @@ int main(int argc, char **argv){
     }
     scanf("%s",user_input);
   }
-  for(int i = 0;i<all_rooms->max_rooms;i++){
-    free(all_rooms[i].room_creatures);
-  }
   free(all_rooms);
   free(all_creatures);
   free(pc);
