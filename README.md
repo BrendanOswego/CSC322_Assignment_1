@@ -5,9 +5,7 @@ To compile main.c:
 ```
 gcc -g -std=c99 main.c
 ```
-<br>
 To run:
 ```
 ./a.out
 ```
-<br>
