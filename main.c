@@ -4,8 +4,6 @@
 #include <stdbool.h>
 #include<time.h>
 
-#define MAX_CREATURES 10
-
 typedef struct _Creature{
   int type;
   int position;
@@ -93,7 +91,12 @@ void start_game(){
   }
   printf("-----------\n");
 }
-
+/*
+Finds the index in the pointer where the given Creature ID is held.
+Creature ID's are unique therefore can only be found in 1 room at a single
+index in the room's creature pointer array
+@param id Creature's unique ID
+*/
 int findCreatureIndex(int id){
   for(int i =0;i<all_rooms->max_rooms;i++){
     for(int j = 0;j<all_rooms[i].c_count;j++){
@@ -104,6 +107,11 @@ int findCreatureIndex(int id){
   }
   return 0;
 }
+/*
+Moves specified Creature given by the id to the new room
+@param new_room The next room the creature that is moving goes to
+@param id Creature's unique ID
+*/
 void move(int new_room,int id){
   int old_room;
   old_room = pc->position;
@@ -132,6 +140,10 @@ void move(int new_room,int id){
   all_rooms[new_room].c_count++;
   all_rooms[old_room].c_count--;
 }
+/*
+Finds the first neighbor for a Creature to move to relative to what room the
+PC is currently in
+*/
 int findNeighbor(){
   bool found = false;
   int pc_pos;
@@ -179,8 +191,12 @@ int findNeighbor(){
       break;
     }
   }
+  return -1;
 }
-
+/*
+Moves PC to room neighbor specified by 'cardinal'
+@param cardinal 0 -> North, 1 -> South, 2 -> East, 3 -> West
+*/
 void movePC(int cardinal){
   int pc_pos = pc->position;
   int id = all_creatures[pc->id].id;
@@ -246,6 +262,12 @@ void movePC(int cardinal){
     break;
   }
 }
+/*
+Initializes an amount of Creatures to move
+@param amount total number of creatures moving
+@param id_list pointer array of ints that hold the ID's of the creatures that
+are moving
+*/
 void moveCreature(int amount,int *id_list){
   int new_pos = findNeighbor();
   for(int i = 0;i<amount;i++){
@@ -258,7 +280,11 @@ void moveCreature(int amount,int *id_list){
     }
   }
 }
-
+/*
+Cleans the room that the PC is currently in
+@param id Creature ID of the Creature the PC wants to clean the room that the
+PC is currently in, if and only if the Creature is in the same room as the PC
+*/
 void clean(int id){
   int amount = 0;
   int new_pos = 0;
@@ -312,6 +338,11 @@ void clean(int id){
   free(id_list);
   printf("Your respect is now %d\n",respect);
 }
+/*
+Dirties the room that the PC is currently in
+@param id Creature ID of the Creature the PC wants to dirty the room that the
+PC is currently in, if and only if the Creature is in the same room as the PC
+*/
 void dirty(int id){
   int amount = 0;
   int new_pos = 0;
@@ -368,6 +399,9 @@ void dirty(int id){
   free(id_list);
   printf("Your respect is now %d\n",respect);
 }
+/*
+Displays information about the room the PC is currently in
+*/
 void look(){
   int pc_pos;
   int i;
@@ -511,10 +545,25 @@ int main(int argc, char **argv){
         printf("Invalid Command\n");
       }
     }
+    if(respect >= 80){
+      printf("Your respect is 80 you won!!!\n");
+      free(all_rooms);
+      free(all_creatures);
+      free(pc);
+      return 0;
+    }
+    if(respect <= 0){
+      printf("Your respect is 0 you lose =(\n");
+      free(all_rooms);
+      free(all_creatures);
+      free(pc);
+      return 0;
+    }
     scanf("%s",user_input);
   }
   free(all_rooms);
   free(all_creatures);
   free(pc);
   puts("End of game");
+  return 0;
 }
